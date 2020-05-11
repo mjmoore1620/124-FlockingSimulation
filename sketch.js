@@ -1,5 +1,6 @@
 const flock = [];
-const flockCount = 50;
+const flockCount = 100;
+let frameRate;
 
 let alignmentSlider, cohesionSlider, separationSlider;
 
@@ -22,4 +23,8 @@ function draw() {
 		flock[i].update();
 		flock[i].show();
 	}
+	
+	frameRate = getFrameRate();
+	frameRate = floor(frameRate);
+	text(frameRate, 10, 10);
 }
