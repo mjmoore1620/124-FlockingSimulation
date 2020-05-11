@@ -55,7 +55,7 @@ class Boid {
         return avg;
     }
 
-    seperation(boids) {
+    separation(boids) {
         let avg = createVector();
         let count = 0;
 
@@ -82,15 +82,15 @@ class Boid {
     steer(boids) {
         let alignment = this.alignment(boids);
         let cohesion = this.cohesion(boids);
-        let seperation = this.seperation(boids);
+        let separation = this.separation(boids);
 
         alignment.mult(alignmentSlider.value());
         cohesion.mult(cohesionSlider.value());
-        seperation.mult(seperationSlider.value());
+        separation.mult(separationSlider.value());
 
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
-        this.acceleration.add(seperation);
+        this.acceleration.add(separation);
     }
 
     wrap() {

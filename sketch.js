@@ -1,13 +1,13 @@
 const flock = [];
 const flockCount = 50;
 
-let alignmentSlider, cohesionSlider, seperationSlider;
+let alignmentSlider, cohesionSlider, separationSlider;
 
 function setup() {
 	createCanvas(800, 600);
 	alignmentSlider = createSlider(0, 5, 1, .1);
 	cohesionSlider = createSlider(0, 5, 1, .1);
-	seperationSlider = createSlider(0, 5, 1, .1);
+	separationSlider = createSlider(0, 5, 1, .1);
 
 	for (let i = 0; i < flockCount; i++) {
 		flock.push(new Boid());
