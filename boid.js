@@ -11,22 +11,15 @@ class Boid {
 
     alignment(boids) {
         let avg = createVector();
-        let count = 0;
 
         for (let i = 0; i < boids.length; i++) {
-            let d = p5.Vector.dist(boids[i].position, this.position);
-            if (d < this.perception && this != boids[i]) {
-                avg.add(boids[i].velocity);
-                count++;
-            }
+            avg.add(boids[i].velocity);
         }
 
-        if (count > 0) {
-            avg.div(count);
-            avg.setMag(this.maxSpeed);
-            avg.sub(this.velocity);
-            avg.limit(this.maxForce);
-        }
+        avg.div(boids.length);
+        avg.setMag(this.maxSpeed);
+        avg.sub(this.velocity);
+        avg.limit(this.maxForce);
 
         return avg;
     }
@@ -34,63 +27,67 @@ class Boid {
 
     cohesion(boids) {
         let avg = createVector();
-        let count = 0;
 
         for (let i = 0; i < boids.length; i++) {
-            let d = p5.Vector.dist(boids[i].position, this.position);
-            if (d < this.perception && this != boids[i]) {
-                avg.add(boids[i].position);
-                count++;
-            }
+            avg.add(boids[i].position);
         }
 
-        if (count > 0) {
-            avg.div(count);
-            avg.sub(this.position);
-            avg.setMag(this.maxSpeed);
-            avg.sub(this.velocity);
-            avg.limit(this.maxForce);
-        }
+        avg.div(boids.length);
+        avg.sub(this.position);
+        avg.setMag(this.maxSpeed);
+        avg.sub(this.velocity);
+        avg.limit(this.maxForce);
 
         return avg;
     }
 
     separation(boids) {
         let avg = createVector();
-        let count = 0;
 
         for (let i = 0; i < boids.length; i++) {
             let d = p5.Vector.dist(boids[i].position, this.position);
-            if (d < this.perception && this != boids[i]) {
-                let diff = p5.Vector.sub(this.position, boids[i].position);
-                diff.div(d);
-                avg.add(diff);
-                count++;
-            }
+            let diff = p5.Vector.sub(this.position, boids[i].position);
+            diff.div(d);
+            avg.add(diff);
         }
 
-        if (count > 0) {
-            avg.div(count);
-            avg.setMag(this.maxSpeed);
-            avg.sub(this.velocity);
-            avg.limit(this.maxForce);
-        }
+        avg.div(boids.length);
+        avg.setMag(this.maxSpeed);
+        avg.sub(this.velocity);
+        avg.limit(this.maxForce);
 
         return avg;
     }
 
     steer(boids) {
-        let alignment = this.alignment(boids);
-        let cohesion = this.cohesion(boids);
-        let separation = this.separation(boids);
+        let locals = this.getLocalBoids(boids);
 
-        alignment.mult(alignmentSlider.value());
-        cohesion.mult(cohesionSlider.value());
-        separation.mult(separationSlider.value());
+        if (locals.length > 0) {
+            let alignment = this.alignment(locals);
+            let cohesion = this.cohesion(locals);
+            let separation = this.separation(locals);
 
-        this.acceleration.add(alignment);
-        this.acceleration.add(cohesion);
-        this.acceleration.add(separation);
+            alignment.mult(alignmentSlider.value());
+            cohesion.mult(cohesionSlider.value());
+            separation.mult(separationSlider.value());
+
+            this.acceleration.add(alignment);
+            this.acceleration.add(cohesion);
+            this.acceleration.add(separation);
+        }
+    }
+
+    getLocalBoids(boids) {
+        let locals = [];
+        for (let i = 0; i < boids.length; i++) {
+            let d = p5.Vector.dist(boids[i].position, this.position);
+            if (d < this.perception && this != boids[i]) {
+                locals.push(boids[i]);
+            }
+        }
+        //console.log(locals.length);
+        
+        return locals;
     }
 
     wrap() {
