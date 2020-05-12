@@ -1,5 +1,6 @@
 const flock = [];
 const flockCount = 100;
+let decimateButton;
 
 let frameRate;
 let frameRates = [];
@@ -12,6 +13,9 @@ function setup() {
 	alignmentSlider = createSlider(0, 5, 1, .1);
 	cohesionSlider = createSlider(0, 5, 1, .1);
 	separationSlider = createSlider(0, 5, 1, .1);
+
+	decimateButton = createButton('decimate the flock');
+	decimateButton.mousePressed(decimateFlock);
 
 	frameRateButton = createButton('average frames');
 	frameRateButton.mousePressed(averageFrames);
@@ -29,11 +33,19 @@ function draw() {
 		flock[i].update();
 		flock[i].show();
 	}
-	
+
 	frameRate = getFrameRate();
 	frameRates.push(frameRate);
 	frameRate = floor(frameRate);
 	text(frameRate, 10, 10);
+}
+
+function decimateFlock() {
+	let tenth = flock.length / 10;
+
+	for (let i = 0; i < tenth; i++) {
+		flock.shift();
+	}
 }
 
 function mouseClicked() {
