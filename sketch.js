@@ -1,10 +1,11 @@
 const flock = [];
 const flockCount = 100;
+
 let frameRate;
 let frameRates = [];
+let frameRateButton;
 
 let alignmentSlider, cohesionSlider, separationSlider;
-let frameRateButton;
 
 function setup() {
 	createCanvas(800, 600);
@@ -35,6 +36,13 @@ function draw() {
 	text(frameRate, 10, 10);
 }
 
+function mouseClicked() {
+	let newBoid = new Boid();
+	newBoid.position.x = mouseX;
+	newBoid.position.y = mouseY;
+	flock.push(newBoid);
+}
+
 function averageFrames() {
 	let avg = 0;
 
@@ -43,6 +51,4 @@ function averageFrames() {
 	});
 	avg = avg / frameRates.length;
 	console.log(avg);
-	
-		
 }
